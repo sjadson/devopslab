@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  Tests:
+  CI Tests:
     name: Tests
     runs-on: ubuntu-latest
     steps:
@@ -35,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
 
-  Build:
+  CI Build:
     needs: Tests
     name: Build
     runs-on: ubuntu-latest
@@ -69,10 +69,10 @@ jobs:
       env: 
         ARTIFACT_REGISTRY: ${{ secrets.ARTIFACT_REGISTRY }}
       run: | 
-        docker build -t ${{ secrets.ARTIFACT_REGISTRY }}/myapp:latest .
-        docker push ${{ secrets.ARTIFACT_REGISTRY }}/myapp:latest
+        docker build -t ${{ secrets.ARTIFACT_REGISTRY_REPO }}/myapp:latest .
+        docker push ${{ secrets.ARTIFACT_REGISTRY_REPO }}/myapp:latest
 
-  DeployHom:
+  CD Deploy Homolog:
     needs: Build
     runs-on: ubuntu-latest
     steps:
@@ -81,7 +81,7 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
 
-  DeployProd:
+  CD Deploy Prod:
     needs: DeployHom
     runs-on: ubuntu-latest
     steps:
