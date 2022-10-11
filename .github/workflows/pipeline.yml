@@ -83,7 +83,7 @@ jobs:
         run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
 
   DeployProd:
-    needs: DeployHom
+    needs: DeployHomolog
     runs-on: ubuntu-latest
     name : "CD Deploy Production GCP"
     steps:
